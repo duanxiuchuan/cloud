@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erongdu.server.activiti.dao.ForminstDao">
+	<resultMap type="com.erongdu.common.core.entity.activiti.Forminst" id="forminstResultMap">
+		<result property="id" column="id"/>
+		<result property="formName" column="form_name"/>
+		<result property="formKey" column="form_key"/>
+		<result property="formContent" column="form_content"/>
+		<result property="createTime" column="create_time"/>
+		<result property="latestUpdateTime" column="latest_update_time"/>
+		<result property="processInstanceId" column="process_instance_id"/>
+		<result property="processDefinitionId" column="process_definition_id"/>
+		<result property="username" column="username"/>
+		<result property="variables" column="variables"/>
+		<result property="category" column="category"/>
+		<result property="nodeName" column="node_name"/>
+		<result property="grouped" column="grouped"/>
+		<result property="endTime" column="end_time"/>
+		<result property="formtplId" column="formtpl_id"/>		
+		<result property="linkedId" column="linked_id"/>
+		<result property="linkedName" column="linked_name"/>
+		<result property="linkedFlag" column="linked_flag"/>
+		<result property="associateFlag" column="associate_flag"/>
+		<result property="associate" column="associate"/>
+	</resultMap>
+	
+	<sql id="select_table_columns">
+		id,
+		form_name,
+		form_key,
+		form_content,
+		create_time,
+		latest_update_time,
+		process_instance_id,
+		process_definition_id,
+		username,
+		variables,
+		category,
+		node_name,
+		grouped,
+		end_time,
+		formtpl_id,
+		linked_id,
+		linked_name,
+		linked_flag,		
+		associate_flag,		
+		associate
+    </sql>
+    
+	<sql id="table_columns">
+		id,
+		form_name,
+		form_key,
+		form_content,
+		create_time,
+		latest_update_time,
+		process_instance_id,
+		process_definition_id,
+		username,
+		variables,
+		category,
+		node_name,
+		grouped,
+		end_time,
+		formtpl_id,
+		linked_id,
+		linked_name,
+		linked_flag,		
+		associate_flag,		
+		associate
+    </sql>
+	<sql id="entity_properties">
+		#{id},
+		#{formName},
+		#{formKey},
+		#{formContent},
+		#{createTime},
+		#{latestUpdateTime},
+		#{processInstanceId},
+		#{processDefinitionId},
+		#{username},
+		#{variables},
+		#{category},
+		#{nodeName},
+		#{grouped},
+		#{endTime},
+		#{formtplId},
+		#{linkedId},
+		#{linkedName},
+		#{linkedFlag},
+		#{associateFlag},
+		#{associate}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="id != null">and id = #{id}</if>
+            <if test="formName != null and formName != ''">and form_name = #{formName}</if>
+            <if test="formKey != null and formKey != ''">and form_key = #{formKey}</if>
+            <if test="formContent != null and formContent != ''">and form_content = #{formContent}</if>
+			<if test="createTime != null">and create_time = #{createTime}</if>
+			<if test="latestUpdateTime != null">and latest_update_time = #{latestUpdateTime}</if>
+            <if test="processInstanceId != null and processInstanceId != ''">and process_instance_id = #{processInstanceId}</if>
+            <if test="processDefinitionId != null and processDefinitionId != ''">and process_definition_id = #{processDefinitionId}</if>
+            <if test="username != null and username != ''">and username =  #{username} </if>
+            <if test="category != null and category != ''">and category =  #{category} </if>
+            <if test="nodeName != null and nodeName != ''">and node_name =  #{nodeName} </if>
+            <if test="grouped != null">and grouped =  #{grouped} </if>
+            <if test="formtplId != null">and formtpl_id =  #{formtplId} </if>
+            <if test="linkedId != null">and linked_id =  #{linkedId} </if>
+            <if test="linkedName != null and linkedName != ''">and linked_name =  #{linkedName} </if>
+            <if test="linkedFlag != null">and linked_flag = #{linkedFlag}</if>
+            <if test="associateFlag != null">and associate_flag = #{associateFlag}</if>
+            <if test="associate != null">and associate = #{associate}</if>
+        </trim>
+    </sql>
+
+	<insert id="insert" parameterType="com.erongdu.common.core.entity.activiti.Forminst"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into act_ext_forminst( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.List">		
+		insert into act_ext_forminst( <include refid="table_columns" /> ) 
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">  
+		( 
+				#{item.id},
+				#{item.formName},
+				#{item.formKey},
+				#{item.formContent},
+				#{item.createTime},
+				#{item.latestUpdateTime},
+				#{item.processInstanceId},
+				#{item.processDefinitionId},
+				#{item.username},
+				#{item.variables},
+				#{item.category},
+				#{item.nodeName},
+				#{item.grouped},
+				#{item.endTime},
+				#{item.formtplId},
+				#{item.linkedId},
+				#{item.linkedName},
+				#{item.linkedFlag},
+				#{item.associateFlag},
+				#{item.associate}
+		)
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="com.erongdu.common.core.entity.activiti.Forminst">
+		update act_ext_forminst 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="formName != null and formName != ''">form_name = #{formName},</if>
+            <if test="formKey != null and formKey != ''">form_key = #{formKey},</if>
+			<if test="latestUpdateTime != null">latest_update_time = #{latestUpdateTime},</if>
+            <if test="processInstanceId != null and processInstanceId != ''">process_instance_id = #{processInstanceId},</if>
+            <if test="processDefinitionId != null and processDefinitionId != ''">process_definition_id = #{processDefinitionId},</if>
+            <if test="variables != null and variables != ''">variables = #{variables},</if>
+            <if test="nodeName != null and nodeName != ''">node_name = #{nodeName},</if>
+            <if test="endTime != null ">end_time = #{endTime},</if>
+            <if test="formtplId != null">formtpl_id =  #{formtplId}, </if>
+            <if test="linkedId != null"> linked_id =  #{linkedId}, </if>
+            <if test="linkedName != null and linkedName != ''">linked_name =  #{linkedName}, </if>
+            <if test="linkedFlag != null">linked_flag = #{linkedFlag},</if>
+            <if test="associateFlag != null">associate_flag = #{associateFlag},</if>
+            <if test="associate != null">associate = #{associate},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+	
+	<update id="updateSelective" parameterType="java.util.Map">
+		update act_ext_forminst 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="formName != null and formName != ''">form_name = #{formName},</if>
+            <if test="formKey != null and formKey != ''">form_key = #{formKey},</if>
+			<if test="latestUpdateTime != null">latest_update_time = #{latestUpdateTime},</if>
+            <if test="processInstanceId != null and processInstanceId != ''">process_instance_id = #{processInstanceId},</if>
+            <if test="processDefinitionId != null and processDefinitionId != ''">process_definition_id = #{processDefinitionId},</if>
+            <if test="variables != null and variables != ''">variables = #{variables},</if>
+            <if test="nodeName != null and nodeName != ''">node_name = #{nodeName},</if>
+            <if test="endTime != null ">end_time = #{endTime},</if>
+            <if test="formtplId != null">formtpl_id =  #{formtplId}, </if>
+            <if test="linkedId != null"> linked_id =  #{linkedId}, </if>
+            <if test="linkedName != null and linkedName != ''">linked_name =  #{linkedName}, </if>
+            <if test="linkedFlag != null">linked_flag = #{linkedFlag},</if>
+            <if test="associateFlag != null">associate_flag = #{associateFlag},</if>
+            <if test="associate != null">associate = #{associate},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+
+
+    <select id="findById" resultMap="forminstResultMap" parameterType="long" >
+		select <include refid="select_table_columns" />
+		from act_ext_forminst
+		where id = #{id}
+	</select>
+	
+	<select id="findSelective" resultMap="forminstResultMap">
+        select <include refid="select_table_columns" />
+        from act_ext_forminst
+        <include refid="page_where" />
+        limit 1
+	</select>
+	
+	<sql id="selective">
+        select id, form_name, form_key, create_time, latest_update_time, grouped, 
+		process_instance_id, process_definition_id, username, category, node_name,
+		end_time, formtpl_id, linked_flag, associate_flag, associate
+        from act_ext_forminst
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="ew.id != null">and id = #{ew.id}</if>
+            <if test="ew.formName != null and ew.formName != ''">and form_name like concat('%', #{ew.formName}, '%')</if>
+            <if test="ew.formKey != null and ew.formKey != ''">and form_key like concat('%', #{ew.formKey}, '%')</if>
+			<if test="ew.startTime != null">and create_time &gt;= #{ew.startTime}</if>
+			<if test="ew.endTime != null">and create_time &lt;= #{ew.endTime}</if>
+            <if test="ew.username != null and ew.username != ''">and username =  #{ew.username} </if>
+            <if test="ew.category != null and ew.category != ''">and category like concat('%', #{ew.category}, '%') </if>
+            <if test="ew.processInstanceId != null">and process_instance_id = #{ew.processInstanceId}</if>
+            <if test="ew.processDefinitionId != null">and process_definition_id = #{ew.processDefinitionId}</if>
+            <if test="ew.linkedId != null">and linked_id =  #{ew.linkedId} </if>
+            <if test="ew.linkedName != null and linkedName != ''">and linked_name =  #{ew.linkedName} </if>
+			<if test="ew.endTimeNotnull != null">and end_time is not null</if>
+			<if test="ew.keywords != null">and (form_name like concat('%', #{ew.keywords}, '%') or category like concat('%', #{keywords}, '%'))</if>
+        </trim>
+        order by id desc
+	</sql>
+	
+    <select id="listSelective" resultMap="forminstResultMap">
+    	<include refid="selective"/>
+	</select>
+	
+    <select id="pageSelective" resultMap="forminstResultMap">
+    	<include refid="selective"/>
+	</select>
+
+    <select id="countSelective" resultType="int" >
+        select count(id) from act_ext_forminst
+        <include refid="page_where" />
+    </select>
+	
+	<delete id="deleteById" parameterType="long">
+		delete from act_ext_forminst
+		where id = #{id}
+	</delete>
+	
+	<!-- 其他自定义SQL -->
+	<select id="findByInstanceId" resultMap="forminstResultMap">
+        select <include refid="select_table_columns" />
+        from act_ext_forminst
+        where process_instance_id = #{processInstanceId}
+        limit 1
+	</select>
+	
+	<update id="updateNodeName" parameterType="java.util.Map">
+		update act_ext_forminst 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="nodeName != null and nodeName != ''">node_name = #{nodeName},</if>
+            <if test="endTime != null ">end_time = #{endTime},</if>
+		</trim>
+		<where>process_instance_id = #{processInstanceId}</where>
+	</update>
+
+
+</mapper>

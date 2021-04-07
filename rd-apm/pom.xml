@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>rd-cloud</artifactId>
+        <groupId>com.erongdu</groupId>
+        <version>2.1-RELEASE</version>
+        <relativePath>../rd-cloud/pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>rd-apm</artifactId>
+    <packaging>pom</packaging>
+    <name>rd-apm</name>
+    <description>rd-apm(Application Performance Monitor)</description>
+
+    <modules>
+        <module>rd-admin</module>
+    </modules>
+    
+    <dependencies>
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
+        </dependency>
+    </dependencies>
+    
+</project>

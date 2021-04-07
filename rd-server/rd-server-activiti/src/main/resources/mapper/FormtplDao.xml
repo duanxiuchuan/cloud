@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erongdu.server.activiti.dao.FormtplDao">
+	<resultMap type="com.erongdu.common.core.entity.activiti.Formtpl" id="formResultMap">
+		<result property="id" column="id"/>
+		<result property="formName" column="form_name"/>
+		<result property="formKey" column="form_key"/>
+		<result property="formContent" column="form_content"/>
+		<result property="createTime" column="create_time"/>
+		<result property="latestUpdateTime" column="latest_update_time"/>
+		<result property="grouped" column="grouped"/>
+		<result property="version" column="version_"/>
+		<result property="suspensionState" column="suspension_state_"/>
+		<result property="linkedFlag" column="linked_flag"/>
+		<result property="associateFlag" column="associate_flag"/>
+	</resultMap>
+	
+	<sql id="select_table_columns">
+		id,
+		form_name,
+		form_key,
+		form_content form_content,
+		create_time,
+		latest_update_time,
+		grouped,
+		version_,
+		suspension_state_,
+		linked_flag,
+		associate_flag
+    </sql>
+	<sql id="table_columns">
+		id,
+		form_name,
+		form_key,
+		form_content,
+		create_time,
+		latest_update_time,
+		grouped,
+		version_,
+		suspension_state_,
+		linked_flag,
+		associate_flag
+    </sql>
+    
+	<sql id="entity_properties">
+		#{id},
+		#{formName},
+		#{formKey},
+		#{formContent},
+		#{createTime},
+		#{latestUpdateTime},
+		#{grouped},
+		#{version},
+		#{suspensionState},
+		#{linkedFlag},
+		#{associateFlag}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+        	<if test="nid != null">and id != #{nid}</if>
+			<if test="id != null">and id = #{id}</if>
+            <if test="formName != null and formName != ''">and form_name = #{formName}</if>
+            <if test="formKey != null and formKey != ''">and form_key = #{formKey}</if>
+            <if test="formContent != null and formContent != ''">and form_content = #{formContent}</if>
+			<if test="createTime != null">and create_time = #{createTime}</if>
+			<if test="latestUpdateTime != null">and latest_update_time = #{latestUpdateTime}</if>
+			<if test="grouped != null">and grouped = #{grouped}</if>
+			<if test="version != null">and version_ = #{version}</if>
+			<if test="latestVersion != null">and version_ = (SELECT max(version_) FROM act_ext_formtpl WHERE form_key = t.form_key AND t.suspension_state_ = 1)</if>
+			<if test="suspensionState != null">and suspension_state_ = #{suspensionState}</if>
+			<if test="linkedFlag != null">and linked_flag = #{linkedFlag}</if>
+			<if test="associateFlag != null">and associate_flag = #{associateFlag}</if>
+        </trim>
+    </sql>
+
+	<insert id="insert" parameterType="com.erongdu.common.core.entity.activiti.Formtpl" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into act_ext_formtpl( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.List">		
+		insert into act_ext_formtpl( <include refid="table_columns" /> ) 
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">  
+		( 
+				#{item.id},
+				#{item.formName},
+				#{item.formKey},
+				#{item.formContent},
+				#{item.createTime},
+				#{item.latestUpdateTime},
+				#{item.grouped},
+				#{item.version},
+				#{item.suspensionState},
+				#{item.linkedFlag},
+				#{item.associateFlag}
+		)
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="com.erongdu.common.core.entity.activiti.Formtpl">
+		update act_ext_formtpl 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="formName != null and formName != ''">form_name = #{formName},</if>
+            <if test="formKey != null and formKey != ''">form_key = #{formKey},</if>
+            <if test="formContent != null and formContent != ''">form_content = #{formContent},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="latestUpdateTime != null">latest_update_time = #{latestUpdateTime},</if>
+			<if test="grouped != null">grouped = #{grouped},</if>
+			<if test="version != null">version_ = #{version},</if>
+			<if test="suspensionState != null">suspension_state_ = #{suspensionState},</if>
+			<if test="linkedFlag != null">linked_flag = #{linkedFlag},</if>
+			<if test="associateFlag != null">associate_flag = #{associateFlag},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+	
+	<update id="updateSelective" parameterType="java.util.Map">
+		update act_ext_formtpl 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="formName != null and formName != ''">form_name = #{formName},</if>
+            <if test="formKey != null and formKey != ''">form_key = #{formKey},</if>
+            <if test="formContent != null and formContent != ''">form_content = #{formContent},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="latestUpdateTime != null">latest_update_time = #{latestUpdateTime},</if>
+			<if test="grouped != null">grouped = #{grouped},</if>			
+			<if test="version != null">version_ = #{version},</if>
+			<if test="suspensionState != null">suspension_state_ = #{suspensionState},</if>
+			<if test="linkedFlag != null">linked_flag = #{linkedFlag},</if>
+			<if test="associateFlag != null">associate_flag = #{associateFlag},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+
+
+    <select id="findById" resultMap="formResultMap" parameterType="long" >
+		select <include refid="select_table_columns" />
+		from act_ext_formtpl
+		where id = #{id}
+	</select>
+	
+    <select id="findByProcessDefinitionId" resultMap="formResultMap" parameterType="String" >
+		select a.id, a.form_name, a.form_key, a.form_content,
+		a.create_time, a.latest_update_time, a.grouped, a.version_, a.suspension_state_, 
+		a.linked_flag, a.associate_flag
+		from act_ext_formtpl a, act_ext_procdef_form b
+		where a.form_key = b.form_key and b.process_definition_id = #{id}
+		and a.version_ = (SELECT max(t.version_) FROM act_ext_formtpl t WHERE t.form_key = a.form_key AND t.suspension_state_ = 1)
+		limit 1
+	</select>
+	
+	<select id="findSelective" resultMap="formResultMap">
+        select <include refid="select_table_columns" />
+        from act_ext_formtpl t
+        <include refid="page_where" />
+        limit 1
+	</select>
+	
+	<sql id="selective">
+        select <include refid="select_table_columns" />
+        from act_ext_formtpl t
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="ew.id != null">and id = #{ew.id}</if>
+            <if test="ew.formName != null and ew.formName != ''">and form_name like concat('%', #{ew.formName},'%') </if>
+            <if test="ew.formKey != null and ew.formKey != ''">and form_key like concat('%', #{ew.formKey}, '%') </if>
+            <if test="ew.formContent != null and ew.formContent != ''">and form_content like concat('%', #{ew.formContent}, '%') </if>
+			<if test="ew.createTime != null">and create_time = #{ew.createTime}</if>
+			<if test="ew.latestUpdateTime != null">and latest_update_time = #{ew.latestUpdateTime}</if>
+			<if test="ew.grouped != null">and grouped = #{ew.grouped}</if>
+			<if test="ew.version != null">and version_ = #{ew.version}</if>
+			<if test="ew.latestVersion != null">and version_ = (SELECT max(p.version_) FROM act_ext_formtpl p WHERE p.form_key = t.form_key AND t.suspension_state_ = 1)</if>
+			<if test="ew.suspensionState != null">and suspension_state_ = #{ew.suspensionState}</if>
+        </trim>
+        order by form_key, id desc
+	</sql>
+	
+    <select id="listSelective" resultMap="formResultMap">
+    	<include refid="selective"/>
+	</select>
+	
+    <select id="pageSelective" resultMap="formResultMap">
+    	<include refid="selective"/>
+	</select>
+
+    <select id="countSelective" resultType="int" >
+        select count(id) from act_ext_formtpl t
+        <include refid="page_where" />
+    </select>
+	
+	<delete id="deleteById" parameterType="long">
+		delete from act_ext_formtpl	where id = #{id}
+	</delete>
+	
+	<!-- 其他自定义SQL -->
+	<select id="listDict" resultType="com.erongdu.common.core.entity.DictResponse">
+        select id, form_name label, form_key value
+        from act_ext_formtpl t
+        <trim prefix="where" prefixOverrides="and | or ">
+        	and version_ = (SELECT max(version_) FROM act_ext_formtpl WHERE form_key = t.form_key AND t.suspension_state_ = 1)
+			<if test="id != null">and id = #{id}</if>
+            <if test="formName != null and formName != ''">and form_name like concat('%', #{formName},'%') </if>
+            <if test="formKey != null and formKey != ''">and form_key like concat('%', #{formKey}, '%') </if>
+        </trim>
+	</select>
+	
+	<select id="findFormNameByKey" parameterType="String" resultType="String">
+		select form_name from act_ext_formtpl t where form_key = #{formKey}
+		and version_ = (SELECT max(version_) FROM act_ext_formtpl WHERE form_key = t.form_key AND t.suspension_state_ = 1)
+	</select>
+	
+	<select id="findMaxVersionByKey" parameterType="String" resultType="int">
+		select max(version_) from act_ext_formtpl t where form_key = #{formKey}
+	</select>
+	
+
+</mapper>

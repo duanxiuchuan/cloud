@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erongdu.server.activiti.dao.AttachmentDao">
+	<resultMap type="com.erongdu.common.core.entity.activiti.Attachment" id="attachmentResultMap">
+		<result property="id" column="id"/>
+		<result property="originalName" column="original_name"/>
+		<result property="targetName" column="target_name"/>
+		<result property="createTime" column="create_time"/>
+		<result property="processDefinitionId" column="process_definition_id"/>
+		<result property="processInstanceId" column="process_instance_id"/>
+		<result property="taskId" column="task_id"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		id,
+		original_name,
+		target_name,
+		create_time,
+		process_definition_id,
+		process_instance_id,
+		task_id
+    </sql>
+	<sql id="entity_properties">
+		#{id},
+		#{originalName},
+		#{targetName},
+		#{createTime},
+		#{processDefinitionId},
+		#{processInstanceId},
+		#{taskId}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="id != null">and id = #{id}</if>
+            <if test="originalName != null and originalName != ''">and original_name = #{originalName}</if>
+            <if test="targetName != null and targetName != ''">and target_name = #{targetName}</if>
+			<if test="createTime != null">and create_time = #{createTime}</if>
+            <if test="processDefinitionId != null and processDefinitionId != ''">and process_definition_id = #{processDefinitionId}</if>
+            <if test="processInstanceId != null and processInstanceId != ''">and process_instance_id = #{processInstanceId}</if>
+            <if test="taskId != null and taskId != ''">and task_id = #{taskId}</if>
+        </trim>
+    </sql>
+
+	<insert id="insert" parameterType="com.erongdu.common.core.entity.activiti.Attachment" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into act_ext_attachment( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.List">		
+		insert into act_ext_attachment( <include refid="table_columns" /> ) 
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">  
+		( 
+				#{item.id},
+				#{item.originalName},
+				#{item.targetName},
+				#{item.createTime},
+				#{item.processDefinitionId},
+				#{item.processInstanceId},
+				#{item.taskId}
+		)
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="com.erongdu.common.core.entity.activiti.Attachment">
+		update act_ext_attachment 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="originalName != null and originalName != ''">original_name = #{originalName},</if>
+            <if test="targetName != null and targetName != ''">target_name = #{targetName},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+            <if test="processDefinitionId != null and processDefinitionId != ''">process_definition_id = #{processDefinitionId},</if>
+            <if test="processInstanceId != null and processInstanceId != ''">process_instance_id = #{processInstanceId},</if>
+            <if test="taskId != null and taskId != ''">task_id = #{taskId},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+	
+	<update id="updateSelective" parameterType="java.util.Map">
+		update act_ext_attachment 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="originalName != null and originalName != ''">original_name = #{originalName},</if>
+            <if test="targetName != null and targetName != ''">target_name = #{targetName},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+            <if test="processDefinitionId != null and processDefinitionId != ''">process_definition_id = #{processDefinitionId},</if>
+            <if test="processInstanceId != null and processInstanceId != ''">process_instance_id = #{processInstanceId},</if>
+            <if test="taskId != null and taskId != ''">task_id = #{taskId},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+
+
+    <select id="findById" resultMap="attachmentResultMap" parameterType="long" >
+		select <include refid="table_columns" />
+		from act_ext_attachment
+		where id = #{id}
+	</select>
+	
+	<select id="findSelective" resultMap="attachmentResultMap">
+        select <include refid="table_columns" />
+        from act_ext_attachment
+        <include refid="page_where" />
+        limit 1
+	</select>
+	
+    <select id="listSelective" resultMap="attachmentResultMap">
+        select <include refid="table_columns" />
+        from act_ext_attachment
+        <include refid="page_where" />
+	</select>
+
+    <select id="countSelective" resultType="int" >
+        select count(id) from act_ext_attachment
+        <include refid="page_where" />
+    </select>
+	
+	<delete id="deleteById" parameterType="long">
+		delete from act_ext_attachment
+		where id = #{id}
+	</delete>
+	
+	<!-- 其他自定义SQL -->
+
+
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.erongdu</groupId>
+        <artifactId>rd-cloud</artifactId>
+        <version>2.1-RELEASE</version>
+        <relativePath>../rd-cloud/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>rd-auth</artifactId>
+    <name>rd-auth</name>
+    <description>rd-cloud认证服务器</description>
+
+    <properties>
+        <febs.version>2.1-RELEASE</febs.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.erongdu</groupId>
+            <artifactId>febs-common-redis-starter</artifactId>
+            <version>${febs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.erongdu</groupId>
+            <artifactId>febs-common-datasource-starter</artifactId>
+            <version>${febs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.erongdu</groupId>
+            <artifactId>febs-common-doc-starter</artifactId>
+            <version>${febs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.erongdu</groupId>
+            <artifactId>febs-common-security-starter</artifactId>
+            <version>${febs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>easy-captcha</artifactId>
+            <version>${easy-captcha.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xkcoding</groupId>
+            <artifactId>justauth-spring-boot-starter</artifactId>
+            <version>${justauth.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

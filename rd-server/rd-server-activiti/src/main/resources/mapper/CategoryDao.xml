@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erongdu.server.activiti.dao.CategoryDao">
+	<resultMap type="com.erongdu.common.core.entity.activiti.Category" id="categoryResultMap">
+		<result property="id" column="id"/>
+		<result property="category" column="category"/>
+		<result property="remark" column="remark"/>
+		<result property="deleteFlag" column="delete_flag"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		id,
+		category,
+		remark,
+		delete_flag
+    </sql>
+	<sql id="entity_properties">
+		#{id},
+		#{category},
+		#{remark},
+		#{deleteFlag}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+        	<if test="nid != null">and id != #{nid}</if>
+			<if test="id != null">and id = #{id}</if>
+            <if test="category != null and category != ''">and category = #{category}</if>
+            <if test="remark != null and remark != ''">and remark = #{remark}</if>
+			<if test="deleteFlag != null">and delete_flag = #{deleteFlag}</if>
+        </trim>
+    </sql>
+
+	<insert id="insert" parameterType="com.erongdu.common.core.entity.activiti.Category" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into act_ext_category( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.List">		
+		insert into act_ext_category( <include refid="table_columns" /> ) 
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">  
+		( 
+				#{item.id},
+				#{item.category},
+				#{item.remark},
+				#{item.deleteFlag}
+		)
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="com.erongdu.common.core.entity.activiti.Category">
+		update act_ext_category 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+			<if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+	
+	<update id="updateSelective" parameterType="java.util.Map">
+		update act_ext_category 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+			<if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+
+
+    <select id="findById" resultMap="categoryResultMap" parameterType="long" >
+		select <include refid="table_columns" />
+		from act_ext_category
+		where id = #{id}
+	</select>
+	
+	<select id="findSelective" resultMap="categoryResultMap">
+        select <include refid="table_columns" />
+        from act_ext_category
+        <include refid="page_where" />
+        limit 1
+	</select>
+	
+	
+	<sql id="selective">
+        select <include refid="table_columns" />
+        from act_ext_category
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="ew.id != null">and id = #{ew.id}</if>
+            <if test="ew.category != null and ew.category != ''">and category like concat('%', #{ew.category}, '%') </if>
+            <if test="ew.remark != null and ew.remark != ''">and remark like concat('%', #{ew.remark}, '%') </if>
+			<if test="ew.deleteFlag != null">and delete_flag = #{ew.deleteFlag}</if>
+        </trim>	
+	</sql>
+	
+    <select id="listSelective" resultMap="categoryResultMap">
+    	<include refid="selective"/>
+	</select>
+	
+    <select id="pageSelective" resultMap="categoryResultMap">
+    	<include refid="selective"/>
+	</select>
+
+    <select id="countSelective" resultType="int" >
+        select count(id) from act_ext_category
+        <include refid="page_where" />
+    </select>
+	
+	<update id="deleteById" parameterType="long">
+		update act_ext_category set delete_flag = 1
+		where id = #{id}
+	</update>
+	
+	<!-- 其他自定义SQL -->
+
+
+</mapper>

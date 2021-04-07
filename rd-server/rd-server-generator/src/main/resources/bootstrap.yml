@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: rd-server-generator
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS_URL}:8001
+        group: DEFAULT_GROUP
+        prefix: rd-server-generator
+        file-extension: yaml
+      discovery:
+        server-addr: ${NACOS_URL}:8001
+
+logging:
+  level:
+    org:
+      springframework:
+        boot:
+          actuate:
+            endpoint:
+              EndpointId: error
+    com:
+      alibaba:
+        cloud:
+          nacos:
+            client:
+              NacosPropertySourceBuilder: error

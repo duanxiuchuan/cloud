@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erongdu.server.activiti.dao.ForminitDao">
+	<resultMap type="com.erongdu.common.core.entity.activiti.Forminit" id="forminitResultMap">
+		<result property="id" column="id"/>
+		<result property="formKey" column="form_key"/>
+		<result property="eleLabel" column="ele_label"/>
+		<result property="cfgName" column="cfg_name"/>
+		<result property="eleValue" column="ele_value"/>
+		<result property="formName" column="form_name"/>
+		<result property="formtplId" column="formtpl_id"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		id,
+		form_key,
+		ele_label,
+		cfg_name,
+		ele_value,
+		formtpl_id
+    </sql>
+	<sql id="entity_properties">
+		#{id},
+		#{formKey},
+		#{eleLabel},
+		#{cfgName},
+		#{eleValue},
+		#{formtplId}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="id != null">and id = #{id}</if>
+            <if test="formKey != null and formKey != ''">and form_key = #{formKey}</if>
+            <if test="eleLabel != null and eleLabel != ''">and ele_label = #{eleLabel}</if>
+            <if test="cfgName != null and cfgName != ''">and cfg_name = #{cfgName}</if>
+            <if test="eleValue != null and eleValue != ''">and ele_value = #{eleValue}</if>
+            <if test="formtplId != null ">and formtpl_id = #{formtplId}</if>
+        </trim>
+    </sql>
+
+	<insert id="insert" parameterType="com.erongdu.common.core.entity.activiti.Forminit">
+		insert into act_ext_forminit( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.List">		
+		insert into act_ext_forminit( <include refid="table_columns" /> ) 
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">  
+		( 
+				#{item.id},
+				#{item.formKey},
+				#{item.eleLabel},
+				#{item.cfgName},
+				#{item.eleValue},
+				#{item.formtplId}
+		)
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="com.erongdu.common.core.entity.activiti.Forminit">
+		update act_ext_forminit 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="formKey != null and formKey != ''">form_key = #{formKey},</if>
+            <if test="eleLabel != null and eleLabel != ''">ele_label = #{eleLabel},</if>
+            <if test="cfgName != null and cfgName != ''">cfg_name = #{cfgName},</if>
+            <if test="eleValue != null and eleValue != ''">ele_value = #{eleValue},</if>
+            <if test="formtplId != null ">formtpl_id = #{formtplId},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+	
+	<update id="updateSelective" parameterType="java.util.Map">
+		update act_ext_forminit 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="formKey != null and formKey != ''">form_key = #{formKey},</if>
+            <if test="eleLabel != null and eleLabel != ''">ele_label = #{eleLabel},</if>
+            <if test="cfgName != null and cfgName != ''">cfg_name = #{cfgName},</if>
+            <if test="eleValue != null and eleValue != ''">ele_value = #{eleValue},</if>
+            <if test="formtplId != null ">formtpl_id = #{formtplId},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+
+
+    <select id="findById" resultMap="forminitResultMap" parameterType="long" >
+		select <include refid="table_columns" />
+		from act_ext_forminit
+		where id = #{id}
+	</select>
+	
+	<select id="findSelective" resultMap="forminitResultMap">
+        select <include refid="table_columns" />
+        from act_ext_forminit
+        <include refid="page_where" />
+        limit 1
+	</select>
+	
+	<sql id="selective">
+        select i.id, i.form_key, i.ele_label, i.cfg_name, i.ele_value,
+        f.form_name
+        from act_ext_forminit i, act_ext_formtpl f
+        <where>
+        	i.formtpl_id = f.id
+        	<if test="ew.formKey != null and ew.formKey != ''">and i.form_key like concat('%', #{ew.formKey}, '%') </if>
+        	<if test="ew.formName != null and ew.formName != ''">and f.form_name like concat('%', #{ew.formName}, '%') </if>
+            <if test="ew.eleLabel != null and ew.eleLabel != ''">and i.ele_label = #{ew.eleLabel}</if>
+            <if test="ew.cfgName != null and ew.cfgName != ''">and i.cfg_name = #{ew.cfgName}</if>
+            <if test="ew.eleValue != null and ew.eleValue != ''">and i.ele_value = #{ew.eleValue}</if>
+        </where>
+	</sql>
+	
+    <select id="listSelective" resultMap="forminitResultMap">
+    	<include refid="selective" />
+	</select>
+	
+    <select id="pageSelective" resultMap="forminitResultMap">
+    	<include refid="selective" />
+	</select>
+
+    <select id="countSelective" resultType="int" >
+        select count(id) from act_ext_forminit
+        <include refid="page_where" />
+    </select>
+	
+	<delete id="deleteById" parameterType="long">
+		delete from act_ext_forminit
+		where id = #{id}
+	</delete>
+	
+	<delete id="deleteByParams" parameterType="map">
+		delete from act_ext_forminit
+		<trim prefix="where" prefixOverrides="and | or ">
+			<if test="id != null">and id = #{id}</if>
+            <if test="formKey != null and formKey != ''">and form_key = #{formKey}</if>
+            <if test="eleLabel != null and eleLabel != ''">and ele_label = #{eleLabel}</if>
+            <if test="cfgName != null and cfgName != ''">and cfg_name = #{cfgName}</if>
+            <if test="eleValue != null and eleValue != ''">and ele_value = #{eleValue}</if>
+            <if test="formtplId != null ">and formtpl_id = #{formtplId}</if>
+        </trim>
+	</delete>
+	
+	<!-- 其他自定义SQL -->
+
+
+</mapper>

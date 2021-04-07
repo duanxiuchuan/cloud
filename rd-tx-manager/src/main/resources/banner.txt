@@ -1,0 +1,6 @@
+|-----------------------------------------|
+|   ${spring.application.name}            
+|   Powered By http://www.erongdu.com/    
+|                              		  
+|   Spring-Boot: ${spring-boot.version}            
+|-----------------------------------------|

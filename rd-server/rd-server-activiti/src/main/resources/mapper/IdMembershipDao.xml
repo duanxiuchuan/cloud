@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erongdu.server.activiti.dao.IdMembershipDao">
+	<resultMap type="com.erongdu.common.core.entity.activiti.IdMembership" id="idMembershipResultMap">
+		<result property="userId" column="USER_ID_"/>
+		<result property="groupId" column="GROUP_ID_"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		USER_ID_,
+		GROUP_ID_
+    </sql>
+	<sql id="entity_properties">
+		#{userId},
+		#{groupId}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+            <if test="userId != null and userId != ''">and USER_ID_ = #{userId}</if>
+            <if test="groupId != null and groupId != ''">and GROUP_ID_ = #{groupId}</if>
+        </trim>
+    </sql>
+
+	<insert id="insert" parameterType="com.erongdu.common.core.entity.activiti.IdMembership">
+		insert into act_id_membership( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.List">		
+		insert into act_id_membership( <include refid="table_columns" /> ) 
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">  
+		( 
+		#{item.userId},
+				#{item.groupId}
+		)
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="com.erongdu.common.core.entity.activiti.IdMembership">
+		update act_id_membership 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="groupId != null and groupId != ''">GROUP_ID_ = #{groupId},</if>
+		</trim>
+		<where>USER_ID_ = #{userId}</where>
+	</update>
+	
+	<update id="updateSelective" parameterType="java.util.Map">
+		update act_id_membership 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="groupId != null and groupId != ''">GROUP_ID_ = #{groupId},</if>
+		</trim>
+		<where>USER_ID_ = #{userId}</where>
+	</update>
+
+
+    <select id="findById" resultMap="idMembershipResultMap" parameterType="long" >
+		select <include refid="table_columns" />
+		from act_id_membership
+		where USER_ID_ = #{id}
+	</select>
+	
+	<select id="findSelective" resultMap="idMembershipResultMap">
+        select <include refid="table_columns" />
+        from act_id_membership
+        <include refid="page_where" />
+        limit 1
+	</select>
+	
+    <select id="listSelective" resultMap="idMembershipResultMap">
+        select <include refid="table_columns" />
+        from act_id_membership
+        <include refid="page_where" />
+	</select>
+
+    <select id="countSelective" resultType="int" >
+        select count(USER_ID_) from act_id_membership
+        <include refid="page_where" />
+    </select>
+	
+	<delete id="deleteById" parameterType="long">
+		delete from act_id_membership
+		where USER_ID_ = #{userId}
+	</delete>
+	
+	<!-- 其他自定义SQL -->
+
+
+</mapper>

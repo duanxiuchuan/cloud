@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erongdu.server.activiti.dao.FormulaDao">
+	<resultMap type="com.erongdu.common.core.entity.activiti.Formula" id="formulaResultMap">
+		<result property="id" column="id"/>
+		<result property="formKey" column="form_key"/>
+		<result property="name" column="name"/>
+		<result property="type" column="type"/>
+		<result property="expression" column="expression"/>
+		<result property="createTime" column="create_time"/>
+		<result property="formtplId" column="formtpl_id"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		id,
+		form_key,
+		name,
+		type,
+		expression,
+		create_time,
+		formtpl_id
+    </sql>
+	<sql id="entity_properties">
+		#{id},
+		#{formKey},
+		#{name},
+		#{type},
+		#{expression},
+		#{createTime},
+		#{formtplId}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="id != null">and id = #{id}</if>
+            <if test="formKey != null and formKey != ''">and form_key = #{formKey}</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="type != null and type != ''">and type = #{type}</if>
+            <if test="expression != null and expression != ''">and expression = #{expression}</if>
+			<if test="createTime != null">and create_time = #{createTime}</if>
+			<if test="formtplId != null">and formtpl_id =  #{formtplId} </if>
+        </trim>
+    </sql>
+
+	<insert id="insert" parameterType="com.erongdu.common.core.entity.activiti.Formula">
+		insert into act_ext_formula( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.List">		
+		insert into act_ext_formula( <include refid="table_columns" /> ) 
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">  
+		( 
+				#{item.id},
+				#{item.formKey},
+				#{item.name},
+				#{item.type},
+				#{item.expression},
+				#{item.createTime},
+				#{item.formtplId}
+		)
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="com.erongdu.common.core.entity.activiti.Formula">
+		update act_ext_formula 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="formKey != null and formKey != ''">form_key = #{formKey},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="expression != null and expression != ''">expression = #{expression},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="formtplId != null">formtpl_id =  #{formtplId}, </if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+	
+	<update id="updateSelective" parameterType="java.util.Map">
+		update act_ext_formula 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="formKey != null and formKey != ''">form_key = #{formKey},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="expression != null and expression != ''">expression = #{expression},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="formtplId != null">formtpl_id =  #{formtplId}, </if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+
+
+    <select id="findById" resultMap="formulaResultMap" parameterType="long" >
+		select <include refid="table_columns" />
+		from act_ext_formula
+		where id = #{id}
+	</select>
+	
+	<select id="findSelective" resultMap="formulaResultMap">
+        select <include refid="table_columns" />
+        from act_ext_formula
+        <include refid="page_where" />
+        limit 1
+	</select>
+	
+	<sql id="selective">
+        select <include refid="table_columns" />
+        from act_ext_formula
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="ew.id != null">and id = #{ew.id}</if>
+            <if test="ew.formKey != null and ew.formKey != ''">and form_key = #{ew.formKey}</if>
+            <if test="ew.name != null and ew.name != ''">and name = #{ew.name}</if>
+            <if test="ew.type != null and ew.type != ''">and type = #{ew.type}</if>
+            <if test="ew.expression != null and ew.expression != ''">and expression = #{ew.expression}</if>
+			<if test="ew.createTime != null">and create_time = #{ew.createTime}</if>
+			<if test="ew.formtplId != null">and formtpl_id =  #{ew.formtplId} </if>
+        </trim>
+	</sql>
+	
+    <select id="listSelective" resultMap="formulaResultMap">
+    	<include refid="selective" />
+	</select>
+	
+    <select id="pageSelective" resultMap="formulaResultMap">
+    	<include refid="selective" />
+	</select>
+
+    <select id="countSelective" resultType="int" >
+        select count(id) from act_ext_formula
+        <include refid="page_where" />
+    </select>
+	
+	<delete id="deleteById" parameterType="long">
+		delete from act_ext_formula
+		where id = #{id}
+	</delete>
+	
+	<delete id="deleteByParams" parameterType="map">
+		delete from act_ext_formula
+		<trim prefix="where" prefixOverrides="and | or ">
+			<if test="id != null">and id = #{id}</if>
+            <if test="formKey != null and formKey != ''">and form_key = #{formKey}</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="type != null and type != ''">and type = #{type}</if>
+            <if test="expression != null and expression != ''">and expression = #{expression}</if>
+			<if test="formtplId != null">and formtpl_id =  #{formtplId} </if>
+        </trim>
+	</delete>
+	
+	<!-- 其他自定义SQL -->
+
+
+</mapper>

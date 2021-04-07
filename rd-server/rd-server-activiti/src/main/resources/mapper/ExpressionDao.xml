@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erongdu.server.activiti.dao.ExpressionDao">
+	<resultMap type="com.erongdu.common.core.entity.activiti.Expression" id="expressionResultMap">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="type" column="type"/>
+		<result property="expression" column="expression"/>
+		<result property="deleteFlag" column="delete_flag"/>
+		<result property="createTime" column="create_time"/>
+		<result property="lastUpdateTime" column="last_update_time"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		id,
+		name,
+		type,
+		expression,
+		delete_flag,
+		create_time,
+		last_update_time
+    </sql>
+	<sql id="entity_properties">
+		#{id},
+		#{name},
+		#{type},
+		#{expression},
+		#{deleteFlag},
+		#{createTime},
+		#{lastUpdateTime}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="id != null">and id = #{id}</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="type != null and type != ''">and type = #{type}</if>
+            <if test="expression != null and expression != ''">and expression = #{expression}</if>
+			<if test="deleteFlag != null">and delete_flag = #{deleteFlag}</if>
+			<if test="createTime != null">and create_time = #{createTime}</if>
+			<if test="lastUpdateTime != null">and last_update_time = #{lastUpdateTime}</if>
+        </trim>
+    </sql>
+
+	<insert id="insert" parameterType="com.erongdu.common.core.entity.activiti.Expression">
+		insert into act_ext_expression( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.List">		
+		insert into act_ext_expression( <include refid="table_columns" /> ) 
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">  
+		( 
+				#{item.id},
+				#{item.name},
+				#{item.type},
+				#{item.expression},
+				#{item.deleteFlag},
+				#{item.createTime},
+				#{item.lastUpdateTime}
+		)
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="com.erongdu.common.core.entity.activiti.Expression">
+		update act_ext_expression 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="expression != null and expression != ''">expression = #{expression},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+			<if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+			<if test="lastUpdateTime != null">last_update_time = #{lastUpdateTime},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+	
+	<update id="updateSelective" parameterType="java.util.Map">
+		update act_ext_expression 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="expression != null and expression != ''">expression = #{expression},</if>
+			<if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+			<if test="lastUpdateTime != null">last_update_time = #{lastUpdateTime},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+
+    <select id="findById" resultMap="expressionResultMap" parameterType="long" >
+		select <include refid="table_columns" />
+		from act_ext_expression
+		where id = #{id}
+	</select>
+	
+	<select id="findSelective" resultMap="expressionResultMap">
+        select <include refid="table_columns" />
+        from act_ext_expression
+        <include refid="page_where" />
+        limit 1
+	</select>
+	
+	<sql id="selective">
+        select <include refid="table_columns" />
+        from act_ext_expression
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="ew.id != null">and id = #{ew.id}</if>
+            <if test="ew.name != null and ew.name != ''">and name like concat('%', #{ew.name}, '%')</if>
+            <if test="ew.type != null and ew.type != ''">and type = #{ew.type}</if>
+            <if test="ew.expression != null and ew.expression != ''">and expression like concat('%', #{ew.expression}, '%')</if>
+			<if test="ew.deleteFlag != null">and delete_flag = #{ew.deleteFlag}</if>
+			<if test="ew.startTime != null">and create_time &gt;= #{ew.startTime}</if>
+			<if test="ew.endTime != null">and create_time &lt;= #{ew.endTime}</if>
+        </trim>
+        order by id desc
+	</sql>
+	
+    <select id="listSelective" resultMap="expressionResultMap">
+    	<include refid="selective" />
+	</select>
+	
+    <select id="pageSelective" resultMap="expressionResultMap">
+    	<include refid="selective" />
+	</select>
+
+    <select id="countSelective" resultType="int" >
+        select count(id) from act_ext_expression
+        <include refid="page_where" />
+    </select>
+	
+	<delete id="deleteById" parameterType="long">
+		delete from act_ext_expression
+		where id = #{id}
+	</delete>
+	
+	<!-- 其他自定义SQL -->
+
+
+</mapper>

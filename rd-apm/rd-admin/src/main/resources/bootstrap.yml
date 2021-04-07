@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: rd-admin
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS_URL}:8001
+        group: DEFAULT_GROUP
+        prefix: rd-admin
+        file-extension: yaml
+
+logging:
+  level:
+    com:
+      alibaba:
+        cloud:
+          nacos:
+            client:
+              NacosPropertySourceBuilder: error

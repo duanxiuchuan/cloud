@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erongdu.server.activiti.dao.IdGroupDao">
+	<resultMap type="com.erongdu.common.core.entity.activiti.IdGroup" id="idGroupResultMap">
+		<result property="id" column="ID_"/>
+		<result property="rev" column="REV_"/>
+		<result property="name" column="NAME_"/>
+		<result property="type" column="TYPE_"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		ID_,
+		REV_,
+		NAME_,
+		TYPE_
+    </sql>
+	<sql id="entity_properties">
+		#{id},
+		#{rev},
+		#{name},
+		#{type}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+            <if test="id != null and id != ''">and ID_ = #{id}</if>
+            <if test="rev != null and rev != ''">and REV_ = #{rev}</if>
+            <if test="name != null and name != ''">and NAME_ = #{name}</if>
+            <if test="type != null and type != ''">and TYPE_ = #{type}</if>
+        </trim>
+    </sql>
+
+    <select id="findById" resultMap="idGroupResultMap" parameterType="long" >
+		select <include refid="table_columns" />
+		from act_id_group
+		where ID_ = #{id}
+	</select>
+	
+	<select id="findSelective" resultMap="idGroupResultMap">
+        select <include refid="table_columns" />
+        from act_id_group
+        <include refid="page_where" />
+        limit 1
+	</select>
+	
+    <select id="listSelective" resultMap="idGroupResultMap">
+        select <include refid="table_columns" />
+        from act_id_group
+        <trim prefix="where" prefixOverrides="and | or ">
+            <if test="id != null and id != ''">and ID_ = #{id}</if>
+            <if test="rev != null and rev != ''">and REV_ = #{rev}</if>
+            <if test="name != null and name != ''">and NAME_ like concat('%', #{name}, '%') </if>
+            <if test="type != null and type != ''">and TYPE_ = #{type}</if>
+        </trim>
+	</select>
+
+    <select id="countSelective" resultType="int" >
+        select count(ID_) from act_id_group
+        <include refid="page_where" />
+    </select>
+	
+	<delete id="deleteById" parameterType="long">
+		delete from act_id_group
+		where ID_ = #{id}
+	</delete>
+	
+	<!-- 其他自定义SQL -->
+
+
+</mapper>

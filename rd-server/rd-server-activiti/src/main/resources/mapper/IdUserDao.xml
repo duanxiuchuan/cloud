@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erongdu.server.activiti.dao.IdUserDao">
+	<resultMap type="com.erongdu.common.core.entity.activiti.IdUser" id="idUserResultMap">
+		<result property="id" column="ID_"/>
+		<result property="rev" column="REV_"/>
+		<result property="first" column="FIRST_"/>
+		<result property="last" column="LAST_"/>
+		<result property="email" column="EMAIL_"/>
+		<result property="pwd" column="PWD_"/>
+		<result property="pictureId" column="PICTURE_ID_"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		ID_,
+		REV_,
+		FIRST_,
+		LAST_,
+		EMAIL_,
+		PWD_,
+		PICTURE_ID_
+    </sql>
+	<sql id="entity_properties">
+		#{id},
+		#{rev},
+		#{first},
+		#{last},
+		#{email},
+		#{pwd},
+		#{pictureId}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+            <if test="id != null and id != ''">and ID_ = #{id}</if>
+			<if test="rev != null">and REV_ = #{rev}</if>
+            <if test="first != null and first != ''">and FIRST_ = #{first}</if>
+            <if test="last != null and last != ''">and LAST_ = #{last}</if>
+            <if test="email != null and email != ''">and EMAIL_ = #{email}</if>
+            <if test="pwd != null and pwd != ''">and PWD_ = #{pwd}</if>
+            <if test="pictureId != null and pictureId != ''">and PICTURE_ID_ = #{pictureId}</if>
+        </trim>
+    </sql>
+
+
+    <select id="findById" resultMap="idUserResultMap" parameterType="String" >
+		select <include refid="table_columns" />
+		from act_id_user
+		where ID_ = #{id}
+	</select>
+	
+	<select id="findSelective" resultMap="idUserResultMap">
+        select <include refid="table_columns" />
+        from act_id_user
+        <include refid="page_where" />
+        limit 1
+	</select>
+	
+    <select id="listSelective" resultMap="idUserResultMap">
+        select <include refid="table_columns" />
+        from act_id_user
+        <include refid="page_where" />
+	</select>
+
+    <select id="countSelective" resultType="int" >
+        select count(ID_) from act_id_user
+        <include refid="page_where" />
+    </select>
+	
+	<delete id="deleteById" parameterType="String">
+		delete from act_id_user
+		where ID_ = #{id}
+	</delete>
+	
+	<!-- 其他自定义SQL -->
+
+
+</mapper>

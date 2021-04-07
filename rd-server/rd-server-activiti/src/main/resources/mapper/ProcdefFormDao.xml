@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erongdu.server.activiti.dao.ProcdefFormDao">
+	<resultMap type="com.erongdu.common.core.entity.activiti.ProcdefForm" id="procdefFormResultMap">
+		<result property="processDefinitionId" column="process_definition_id"/>
+		<result property="formKey" column="form_key"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		process_definition_id,
+		form_key
+    </sql>
+	<sql id="entity_properties">
+		#{processDefinitionId},
+		#{formKey}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+            <if test="processDefinitionId != null and processDefinitionId != ''">and process_definition_id = #{processDefinitionId}</if>
+            <if test="formKey != null and formKey != ''">and form_key = #{formKey}</if>
+        </trim>
+    </sql>
+
+	<insert id="insert" parameterType="com.erongdu.common.core.entity.activiti.ProcdefForm">
+		insert into act_ext_procdef_form( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.List">		
+		insert into act_ext_procdef_form( <include refid="table_columns" /> ) 
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">  
+		( 
+		#{item.processDefinitionId},
+				#{item.formKey}
+		)
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="com.erongdu.common.core.entity.activiti.ProcdefForm">
+		update act_ext_procdef_form 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="formKey != null and formKey != ''">form_key = #{formKey},</if>
+		</trim>
+		<where>process_definition_id = #{processDefinitionId}</where>
+	</update>
+	
+	<update id="updateSelective" parameterType="java.util.Map">
+		update act_ext_procdef_form 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="formKey != null and formKey != ''">form_key = #{formKey},</if>
+		</trim>
+		<where>process_definition_id = #{processDefinitionId}</where>
+	</update>
+
+
+    <select id="findById" resultMap="procdefFormResultMap" parameterType="long" >
+		select <include refid="table_columns" />
+		from act_ext_procdef_form
+		where process_definition_id = #{id}
+	</select>
+	
+	<select id="findSelective" resultMap="procdefFormResultMap">
+        select <include refid="table_columns" />
+        from act_ext_procdef_form
+        <include refid="page_where" />
+        limit 1
+	</select>
+	
+    <select id="listSelective" resultMap="procdefFormResultMap">
+        select <include refid="table_columns" />
+        from act_ext_procdef_form
+        <include refid="page_where" />
+	</select>
+
+    <select id="countSelective" resultType="int" >
+        select count(process_definition_id) from act_ext_procdef_form
+        <include refid="page_where" />
+    </select>
+	
+	<delete id="deleteById" parameterType="long">
+		delete from act_ext_procdef_form
+		where process_definition_id = #{processDefinitionId}
+	</delete>
+	
+	<!-- 其他自定义SQL -->
+
+
+</mapper>

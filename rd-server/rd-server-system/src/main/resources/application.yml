@@ -1,0 +1,104 @@
+server:
+  port: 8201
+    
+spring:
+  aop:
+    proxy-target-class: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  boot:
+    admin:
+      client:
+        url: http://monitor-admin:8401
+        username: febs
+        password: 123456
+        instance:
+          prefer-ip: true
+  freemarker:
+    check-template-location: false
+
+  datasource:
+    dynamic:
+      p6spy: true
+      hikari:
+        connection-timeout: 30000
+        max-lifetime: 1800000
+        max-pool-size: 15
+        min-idle: 5
+        connection-test-query: select 1
+        pool-name: HikariCP
+      primary: base
+      datasource:
+        base:
+          username: root
+          password: root
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://172.16.90.129:3306/febs_cloud_base?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8&nullCatalogMeansCurrent=true
+  redis:
+    database: 12
+    host: 172.16.90.129
+    port: 6379
+    password: 1111
+    lettuce:
+      pool:
+        min-idle: 8
+        max-idle: 500
+        max-active: 2000
+        max-wait: 10000
+    timeout: 5000
+
+mybatis-plus:
+  type-aliases-package: com.erongdu.common.core.entity.system,com.erongdu.common.tool.domain
+  mapper-locations: classpath*:mapper/*.xml
+  configuration:
+    jdbc-type-for-null: null
+  global-config:
+    banner: false
+security:
+  oauth2:
+    resource:
+      id: ${spring.application.name}
+      user-info-uri: http://gateway-febs:8301/api/auth/user
+
+info:
+  app:
+    name: ${spring.application.name}
+    description: "@project.description@"
+    version: "@project.version@"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+rd:
+  # oss配置
+  oss: 
+    enable: true
+    endpoint: http://minio.test.rd.com
+    accessKey: UaPNTS8UXZ
+    secretKey: Fy8Y59P9hKRFpGhzhD4lDXTP7v3dbDD0l3u8tJOC
+    bucketName: rd-cloud
+  doc:
+    enable: true
+    title: ${spring.application.name}文档
+    base-package: com.erongdu.server.system.controller
+    description: ${rd.doc.title}
+    name: MrBird
+    email: 852252810@qq.com
+    url: http://www.erongdu.com
+    version: 2.1-RELEASE
+  cloud:
+    security:
+      enable: true
+      only-fetch-by-gateway: false
+      anon-uris: /actuator/**,/**,/v2/api-docs,/v2/api-docs-ext
+      auth-uri: /**
+      ## /actuator/**,/**,/v2/api-docs,/v2/api-docs-ext
+tx-lcn:
+  client:
+    manager-address: cloud-tx-manage:8888

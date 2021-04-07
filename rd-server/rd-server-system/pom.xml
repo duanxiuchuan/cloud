@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.erongdu</groupId>
+        <artifactId>rd-server</artifactId>
+        <version>2.1-RELEASE</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>rd-server-system</artifactId>
+    <name>rd-server-system</name>
+    <description>rd-server-system微服务系统模块</description>
+
+
+    <dependencies>
+    	<dependency>
+            <groupId>com.erongdu</groupId>
+            <artifactId>febs-common-datasource-starter</artifactId>
+            <version>${febs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.erongdu</groupId>
+            <artifactId>febs-common-security-starter</artifactId>
+            <version>${febs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.erongdu</groupId>
+            <artifactId>febs-common-doc-starter</artifactId>
+            <version>${febs.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.erongdu</groupId>
+            <artifactId>febs-common-tool-starter</artifactId>
+            <version>${febs.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codingapi.txlcn</groupId>
+            <artifactId>txlcn-tc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.codingapi.txlcn</groupId>
+            <artifactId>txlcn-txmsg-netty</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

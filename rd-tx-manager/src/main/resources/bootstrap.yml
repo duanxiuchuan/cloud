@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: rd-tx-manager
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS_URL}:8001
+        group: DEFAULT_GROUP
+        prefix: rd-tx-manager
+        file-extension: yaml
+logging:
+  level:
+    com:
+      alibaba:
+        cloud:
+          nacos:
+            client:
+              NacosPropertySourceBuilder: error
